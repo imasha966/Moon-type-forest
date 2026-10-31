@@ -1,0 +1,9 @@
+import { database, auth } from "./firebase.js";
+import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+let selectedRoom="";
+document.getElementById("loginBtn").onclick=async()=>{try{await signInWithEmailAndPassword(auth,document.getElementById("email").value,document.getElementById("password").value);document.getElementById("loginScreen").style.display="none";document.getElementById("adminPanel").style.display="block";loadRooms()}catch(e){alert(e.message)}};
+document.getElementById("createBtn").onclick=async()=>{const code=document.getElementById("newRoom").value.toUpperCase();if(!code)return;await set(ref(database,"rooms/"+code),{code,difficulty:document.getElementById("difficulty").value,duration:180,status:"waiting",createdAt:Date.now()});selectedRoom=code};
+function loadRooms(){onValue(ref(database,"rooms"),snap=>{const data=snap.val();if(!data)return;document.getElementById("roomList").innerHTML=Object.keys(data).map(c=>`<div onclick="window.selectRoom('${c}')" style="cursor:pointer;padding:5px;border:1px solid #555;margin:3px">${c} - ${data[c].status}</div>`).join("")})}
+window.selectRoom=c=>{selectedRoom=c;onValue(ref(database,`players/${c}`),snap=>{const p=snap.val();document.getElementById("playerList").innerHTML=p?Object.values(p).map(x=>`${x.name} - ${x.school}`).join("<br>"):"No players"})};
+document.getElementById("startBtn").onclick=async()=>{if(!selectedRoom)return alert("Room select කරන්න!");await set(ref(database,`rooms/${selectedRoom}/status`),"started");await set(ref(database,`rooms/${selectedRoom}/endTime`),Date.now()+180*1000);alert("Started!")};
