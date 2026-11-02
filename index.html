@@ -1,71 +1,138 @@
- <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Forest Type - EXACT FOREST + SOUND FIXED</title>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Moon Type Forest - Help Boo!</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Quicksand',sans-serif;background:#0a1222;color:white;min-height:100vh;overflow:hidden}
-.screen{display:none;min-height:100vh;width:100%;position:relative}.screen.active{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0}
-#homeScreen{background:url('forest_bg.jpg') no-repeat center center;background-size:cover;position:relative}
-#homeScreen::before{content:'';position:absolute;inset:0;background:linear-gradient(to top, rgba(10,18,34,0.85) 0%, rgba(10,18,34,0.15) 50%, transparent 100%);z-index:1}
-.home-content{position:relative;z-index:3;width:100%;height:100vh;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding-bottom:8vh}
-.title-glow{font-family:'Fredoka';font-size:clamp(38px,11vw,68px);font-weight:700;color:#fff;text-shadow:0 0 20px #7dd3c8,0 0 40px #7dd3c8,0 3px 10px black;letter-spacing:2px;animation:titleFloat 3s infinite}
-@keyframes titleFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-.subtitle{color:#c8ffe8;margin:6px 0 18px;font-size:clamp(14px,3.8vw,18px);text-shadow:0 2px 6px black}
-.btn-start{background:linear-gradient(135deg,#ffe9a8,#ffb86a,#ff8c42);color:#3a2112;border:none;padding:16px 48px;border-radius:999px;font-family:'Fredoka';font-weight:700;font-size:22px;cursor:pointer;box-shadow:0 8px 25px rgba(255,184,106,0.6);animation:btnPulse 2s infinite}
-@keyframes btnPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
-.char-hotspot{position:absolute;z-index:2;cursor:pointer;border-radius:50%;background:radial-gradient(circle, rgba(255,255,255,0.12), transparent);animation:hotspotPulse 2.5s infinite}
-@keyframes hotspotPulse{0%,100%{box-shadow:0 0 0 0 rgba(125,211,200,0.3)}50%{box-shadow:0 0 0 12px rgba(125,211,200,0)}}
-#hotspotBoo{left:50%;top:58%;width:110px;height:130px;transform:translate(-50%,-50%)}
-#hotspotOllie{left:71%;top:36%;width:85px;height:85px;transform:translate(-50%,-50%)}
-#hotspotBatty1{left:20%;top:45%;width:75px;height:55px;transform:translate(-50%,-50%)}
-#hotspotBatty2{left:74%;top:62%;width:75px;height:55px;transform:translate(-50%,-50%)}
-#hotspotBatty3{left:46%;top:24%;width:65px;height:50px;transform:translate(-50%,-50%)}
-.audio-ctrl{position:fixed;top:10px;right:10px;z-index:99;display:flex;gap:8px;align-items:center;background:rgba(0,0,0,0.75);backdrop-filter:blur(12px);padding:10px 14px;border-radius:999px;border:1px solid rgba(255,255,255,0.2)}
-.audio-ctrl button{background:rgba(255,255,255,0.15);border:none;color:white;font-size:18px;cursor:pointer;width:36px;height:36px;border-radius:50%}
-.audio-ctrl input{width:70px;accent-color:#7dd3c8}
-.music-hint{position:absolute;top:12px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.85);padding:10px 18px;border-radius:999px;font-size:13px;z-index:10;border:1px solid #7dd3c8;animation:hintBounce 1.8s infinite;text-align:center}
-@keyframes hintBounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-4px)}}
-.video-fallback{width:100%;max-width:900px;height:55vh;background:linear-gradient(rgba(0,0,0,0.1),rgba(0,0,0,0.3)),url('forest_bg.jpg');background-size:cover;background-position:center;border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.word-display{background:rgba(255,255,255,0.96);color:#12372a;padding:22px 28px;border-radius:16px;font-size:clamp(20px,5vw,28px);font-weight:700;min-height:80px;display:flex;align-items:center;justify-content:center;max-width:90%}
-.count-num{font-family:'Fredoka';font-size:clamp(80px,30vw,180px);font-weight:800;color:#ffe9a8;text-shadow:0 0 40px #ffb86a;animation:countPop 1s ease}
-@keyframes countPop{0%{transform:scale(.3);opacity:0}50%{transform:scale(1.2)}100%{transform:scale(1);opacity:1}}
-.final-screen{background:linear-gradient(rgba(10,18,34,0.2),rgba(10,18,34,0.65)),url('boo_house.jpg');background-size:cover;background-position:center}
-</style></head><body>
-<div class="audio-ctrl"><button id="musicToggle">🔇 TAP FOR SOUND</button><input type="range" id="volSlider" min="0" max="1" step="0.05" value="0.8"/></div>
-<div id="homeScreen" class="screen active">
-<div class="music-hint" id="musicHint">🔊 TAP BOO 👻 FOR MAGICAL MUSIC & SOUND!</div>
-<div class="char-hotspot" id="hotspotBoo"></div><div class="char-hotspot" id="hotspotOllie"></div><div class="char-hotspot" id="hotspotBatty1"></div><div class="char-hotspot" id="hotspotBatty2"></div><div class="char-hotspot" id="hotspotBatty3"></div>
-<div class="home-content"><div style="text-align:center"><div class="title-glow">FOREST TYPE</div><div class="subtitle">Help Boo find his way home • Tap characters!</div><button class="btn-start" id="startBtn">START 🌙✨</button><p style="margin-top:12px;font-size:11px;opacity:0.8;text-shadow:0 1px 4px black">Matara Technical College • ICT Second Batch</p></div></div>
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap');
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
+body { font-family:'Fredoka', sans-serif; background:#0a1520; overflow:hidden; height:100vh; height:100dvh; }
+
+#game { position:relative; width:100%; height:100vh; height:100dvh; overflow:hidden; background: url('forest_bg.jpg') center/cover no-repeat, #0f2a1a; }
+
+.top-bar { position:absolute; top:0; left:0; right:0; z-index:20; display:flex; justify-content:space-between; padding:10px 12px; pointer-events:none; }
+.badge { pointer-events:auto; background: linear-gradient(90deg,#ff5a5a,#ff8a5a); color:white; padding:6px 14px; border-radius:20px; font-size:12px; font-weight:700; box-shadow:0 4px 12px rgba(0,0,0,0.3); animation:pulse 1.5s infinite; cursor:pointer; }
+.sound-btn { pointer-events:auto; background:rgba(0,0,0,0.6); color:white; border:1px solid rgba(255,255,255,0.3); padding:6px 10px; border-radius:12px; font-size:10px; line-height:1.2; text-align:center; backdrop-filter:blur(5px); cursor:pointer; }
+@keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.05)} }
+
+.scene { position:absolute; inset:0; }
+.char { position:absolute; cursor:pointer; user-select:none; transition: transform 0.2s; filter:drop-shadow(0 8px 16px rgba(0,0,0,0.4)); }
+.char:active { transform:scale(0.9)!important; }
+
+/* Positions tuned for your forest image */
+#boo { left:50%; top:58%; transform:translate(-50%,-50%); width:110px; height:130px; z-index:10; animation:floatBoo 2.5s ease-in-out infinite; }
+#boo-inner { width:100%; height:100%; background: radial-gradient(circle at 35% 35%, #ffffff, #e0f0ff 60%, #a0c8ff); border-radius:50% 50% 40% 40% / 60% 60% 40% 40%; position:relative; box-shadow:0 0 30px rgba(255,255,255,0.6), inset 0 -10px 20px rgba(100,150,255,0.3); }
+#boo-inner::before { content:'👻'; font-size:80px; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); filter:drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
+#boo .eyes { position:absolute; top:38%; left:50%; transform:translateX(-50%); display:flex; gap:18px; }
+#boo .eye { width:12px; height:16px; background:#1a1a2e; border-radius:50%; position:relative; }
+#boo .eye::after { content:''; position:absolute; width:4px; height:4px; background:white; border-radius:50%; top:2px; left:2px; }
+
+#ollie { right:22%; top:38%; width:90px; height:95px; z-index:8; animation:hoot 4s ease-in-out infinite; }
+#ollie-inner { font-size:78px; filter:drop-shadow(0 4px 8px rgba(0,0,0,0.5)); }
+
+#bat1 { left:18%; top:45%; width:85px; height:70px; z-index:8; animation:flapLeft 0.4s ease-in-out infinite alternate; }
+#bat2 { left:42%; top:32%; width:75px; height:60px; z-index:7; animation:flapRight 0.35s ease-in-out infinite alternate; }
+#bat3 { right:12%; top:52%; width:90px; height:70px; z-index:9; animation:flapLeft 0.5s ease-in-out infinite alternate; }
+.bat-inner { font-size:62px; display:block; }
+
+@keyframes floatBoo { 0%,100%{transform:translate(-50%,-50%) translateY(0)} 50%{transform:translate(-50%,-50%) translateY(-12px)} }
+@keyframes hoot { 0%,90%,100%{transform:rotate(0)} 92%{transform:rotate(-8deg)} 94%{transform:rotate(8deg)} 96%{transform:rotate(-4deg)} }
+@keyframes flapLeft { 0%{transform:rotate(-8deg) translateY(0)} 100%{transform:rotate(8deg) translateY(-6px)} }
+@keyframes flapRight { 0%{transform:rotate(8deg) translateY(0)} 100%{transform:rotate(-8deg) translateY(-8px)} }
+
+.reacting { animation: reactPop 0.6s ease !important; }
+@keyframes reactPop { 0%{transform:translate(-50%,-50%) scale(1)} 30%{transform:translate(-50%,-50%) scale(1.3) rotate(5deg)} 60%{transform:translate(-50%,-50%) scale(0.9) rotate(-5deg)} 100%{transform:translate(-50%,-50%) scale(1)} }
+.reacting-right { animation: reactPopRight 0.6s ease !important; }
+@keyframes reactPopRight { 0%{transform:scale(1)} 30%{transform:scale(1.3) rotate(8deg)} 60%{transform:scale(0.9) rotate(-8deg)} 100%{transform:scale(1)} }
+
+.bubble { position:absolute; background:white; color:#2a2a4a; padding:10px 16px; border-radius:18px 18px 18px 4px; font-size:14px; font-weight:600; box-shadow:0 8px 20px rgba(0,0,0,0.3); z-index:30; pointer-events:none; opacity:0; transform:translateY(10px) scale(0.8); transition:all 0.3s cubic-bezier(0.68,-0.55,0.27,1.55); max-width:180px; }
+.bubble.show { opacity:1; transform:translateY(0) scale(1); }
+.bubble::after { content:''; position:absolute; bottom:-6px; left:12px; width:12px; height:12px; background:white; transform:rotate(45deg); }
+
+.bottom { position:absolute; bottom:0; left:0; right:0; z-index:20; background:linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%); padding:22px 16px 18px; text-align:center; pointer-events:none; }
+.title { font-size:34px; font-weight:700; color:white; text-shadow:0 0 20px #7afcff, 0 2px 10px rgba(0,0,0,0.8); letter-spacing:1px; line-height:1; }
+.sub { color:rgba(255,255,255,0.8); font-size:11px; margin:6px 0 12px; letter-spacing:0.5px; }
+.start-btn { pointer-events:auto; background:linear-gradient(90deg,#ffb347,#ffcc33); color:#3a2100; border:none; padding:12px 36px; border-radius:28px; font-family:'Fredoka'; font-weight:700; font-size:16px; box-shadow:0 6px 20px rgba(255,180,50,0.5); cursor:pointer; transition:transform 0.15s; }
+.start-btn:active { transform:scale(0.95); }
+
+#intro { position:absolute; inset:0; background:black; z-index:50; display:flex; align-items:center; justify-content:center; }
+#intro video { width:100%; height:100%; object-fit:cover; }
+#intro .skip { position:absolute; bottom:20px; right:20px; background:rgba(0,0,0,0.5); color:white; border:1px solid rgba(255,255,255,0.3); padding:8px 16px; border-radius:20px; font-size:12px; cursor:pointer; }
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="intro" style="display:none">
+    <video id="introVideo" playsinline muted></video>
+    <div class="skip" onclick="closeIntro()">SKIP ▶</div>
+  </div>
+
+  <div class="top-bar">
+    <div class="badge" onclick="tapBoo()">👻 TAP BOO FOR MUSIC!</div>
+    <div class="sound-btn" onclick="toggleSound()" id="soundBtn">TAP<br>BOO<br>FOR<br>SOUND<br>🔊</div>
+  </div>
+
+  <div class="scene">
+    <div class="char" id="bat2" onclick="tapChar('bat2')"><span class="bat-inner">🦇</span><div class="bubble" id="bubble-bat2"></div></div>
+    <div class="char" id="ollie" onclick="tapChar('ollie')"><span id="ollie-inner">🦉</span><div class="bubble" id="bubble-ollie"></div></div>
+    <div class="char" id="bat1" onclick="tapChar('bat1')"><span class="bat-inner">🦇</span><div class="bubble" id="bubble-bat1"></div></div>
+    <div class="char" id="bat3" onclick="tapChar('bat3')"><span class="bat-inner">🦇</span><div class="bubble" id="bubble-bat3"></div></div>
+    <div class="char" id="boo" onclick="tapBoo()"><div id="boo-inner"><div class="eyes"><div class="eye"></div><div class="eye"></div></div></div><div class="bubble" id="bubble-boo" style="left:120%; top:10%;"></div></div>
+  </div>
+
+  <div class="bottom">
+    <div class="title">FOREST TYPE</div>
+    <div class="sub">Help Boo find his way home • Tap characters!</div>
+    <button class="start-btn" onclick="startJourney()">START 🌙✨</button>
+    <div style="color:rgba(255,255,255,0.4); font-size:8px; margin-top:8px;">Matara Technical College • ICT Second Batch</div>
+  </div>
 </div>
-<div id="videoScreen" class="screen" style="background:#050a14;padding:16px"><video id="introVideo" playsinline style="display:none;width:100%;max-width:900px;max-height:70vh;border-radius:18px;background:black"></video><div id="videoFallback" class="video-fallback"><div style="font-size:90px">👻</div><h3 style="color:#ffe9a8;font-family:Fredoka">Boo's Forest</h3></div><p id="videoNote" style="margin-top:14px;color:#7dd3c8;text-align:center">Loading...</p><button class="btn-start" id="registerBtn" style="margin-top:18px;display:none">REGISTER TO HELP BOO →</button></div>
-<div id="registerScreen" class="screen" style="background:linear-gradient(rgba(10,18,34,0.7),rgba(10,18,34,0.85)),url('forest_bg.jpg');background-size:cover"><div style="background:rgba(255,255,255,0.12);backdrop-filter:blur(16px);border-radius:20px;padding:28px;width:100%;max-width:420px"><h2 style="text-align:center;font-family:Fredoka">Join Forest Type</h2><input id="playerName" placeholder="Your Name" style="width:100%;padding:14px;margin:10px 0;border-radius:12px;background:rgba(0,0,0,0.5);color:white;border:1px solid rgba(255,255,255,0.3)"/><input id="roomCode" placeholder="Room Code" style="width:100%;padding:14px;margin:10px 0;border-radius:12px;background:rgba(0,0,0,0.5);color:white;border:1px solid rgba(255,255,255,0.3)"/><button class="btn-start" id="joinBtn" style="width:100%;margin-top:12px">Join Room</button><div id="timeMsg" style="margin-top:12px;padding:10px;background:rgba(125,211,200,0.2);border-radius:12px;text-align:center">Waiting...</div></div></div>
-<div id="lobbyScreen" class="screen"><h2>🌲 Waiting in Forest...</h2><p id="lobbyInfo"></p><div style="font-size:50px;margin-top:16px">👻🦉🦇</div></div>
-<div id="countdownScreen" class="screen" style="background:radial-gradient(circle,#1a2f2a,#0a1222)"><div class="count-num" id="countNum">3</div></div>
-<div id="typingScreen" class="screen" style="background:linear-gradient(rgba(10,18,34,0.82),rgba(10,18,34,0.9)),url('forest_bg.jpg');background-size:cover;align-items:stretch;justify-content:flex-start;padding:0"><div style="display:flex;justify-content:space-between;padding:12px 16px;background:rgba(0,0,0,0.5)"><div id="gameTimer" style="font-family:Fredoka;font-size:22px;background:rgba(255,233,168,0.2);padding:6px 14px;border-radius:999px">00:00</div><div style="display:flex;gap:10px"><div style="background:rgba(255,255,255,0.12);padding:8px 12px;border-radius:999px;font-size:13px">Score: <span id="scoreVal">0</span></div><div style="background:rgba(255,255,255,0.12);padding:8px 12px;border-radius:999px;font-size:13px">WPM: <span id="wpmVal">0</span></div></div></div><div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px"><div class="word-display" id="wordDisplay">Loading...</div><div style="margin-top:20px;width:100%;max-width:560px"><input id="typeInput" placeholder="Type here..." style="width:100%;padding:18px;font-size:20px;border-radius:14px;text-align:center" autocomplete="off"/></div></div></div>
-<div id="winnerScreen" class="screen"><h2 style="font-family:Fredoka">🏆 Forest Champions</h2><div id="winnerList" style="background:rgba(255,255,255,0.08);border-radius:20px;padding:24px;width:100%;max-width:500px;margin-top:12px"></div><button class="btn-start" id="toFinalBtn" style="margin-top:18px">See Boo's Home →</button></div>
-<div id="finalScreen" class="screen final-screen"><div style="font-size:110px">👻</div><div style="background:rgba(0,0,0,0.65);backdrop-filter:blur(12px);padding:22px 30px;border-radius:18px;border:1px solid rgba(255,233,168,0.4);text-align:center;margin-top:20px;max-width:92%"><h2 style="color:#ffe9a8;font-family:Fredoka">Thank you for helping me to reach my home</h2><p style="margin-top:10px;color:#c8ffe8">🏠 Boo is finally home!</p></div><button class="btn-start" style="margin-top:22px;background:rgba(255,255,255,0.15);color:white;border:1px solid rgba(255,255,255,0.3);font-size:16px" onclick="location.reload()">Play Again</button></div>
-<audio id="bgMusic" loop preload="auto"></audio>
+
 <script>
-const WORDS=["moon","forest","boo","ollie","batty","light","home","path","glow","star","owl","ghost","night","magic","help","type","fast","accurate","find","tree","branch","wind","mist","whisper","journey","friend","brave","kind","soft","dream","typing","matara","technical","college","house","reach"];
-const MUSIC_SRC="https://cdn.pixabay.com/download/audio/2022/03/15/audio_0a6d2b9b47.mp3?filename=magical-forest-111998.mp3";
-const homeScreen=document.getElementById('homeScreen'),videoScreen=document.getElementById('videoScreen'),introVideo=document.getElementById('introVideo'),videoFallback=document.getElementById('videoFallback'),registerBtn=document.getElementById('registerBtn'),registerScreen=document.getElementById('registerScreen'),startBtn=document.getElementById('startBtn'),bgMusic=document.getElementById('bgMusic'),musicToggle=document.getElementById('musicToggle'),volSlider=document.getElementById('volSlider'),musicHint=document.getElementById('musicHint');
-let musicStarted=false,musicOn=false;
-bgMusic.src=MUSIC_SRC;bgMusic.volume=0.8;bgMusic.loop=true;
-function tryStartMusic(){if(musicStarted&&musicOn)return;bgMusic.volume=volSlider.value;bgMusic.play().then(()=>{musicStarted=true;musicOn=true;musicToggle.textContent='🔊 MUSIC ON';musicHint.style.display='none';if(navigator.vibrate)navigator.vibrate(60);}).catch(e=>{musicToggle.textContent='🔇 TAP BOO FOR SOUND';musicHint.style.display='block';musicHint.innerHTML='🔊 TAP BOO 👻 FOR MUSIC!';musicHint.style.background='rgba(255,80,80,0.9)';});}
-homeScreen.addEventListener('click',tryStartMusic);homeScreen.addEventListener('touchstart',tryStartMusic,{passive:true});
-document.querySelectorAll('.char-hotspot').forEach(h=>{h.addEventListener('click',e=>{e.stopPropagation();tryStartMusic();h.style.transform+=' scale(1.2)';setTimeout(()=>h.style.transform=h.style.transform.replace(' scale(1.2)',''),350);if(navigator.vibrate)navigator.vibrate([30,50,30]);});});
-musicToggle.onclick=()=>{if(musicOn){bgMusic.pause();musicOn=false;musicToggle.textContent='🔇 TAP FOR SOUND';}else tryStartMusic();};
-volSlider.oninput=e=>{bgMusic.volume=e.target.value;};
-startBtn.onclick=async()=>{tryStartMusic();await new Promise(r=>setTimeout(r,400));const sources=["assets/intro.mp4","intro.mp4"];let loaded=false;for(let src of sources){try{introVideo.src=src;await new Promise((res,rej)=>{introVideo.oncanplay=res;introVideo.onerror=rej;setTimeout(rej,1500);});loaded=true;break;}catch(e){continue;}}homeScreen.classList.remove('active');videoScreen.classList.add('active');if(loaded){videoFallback.style.display='none';introVideo.style.display='block';bgMusic.volume=volSlider.value*0.2;try{await introVideo.play();}catch(e){}introVideo.addEventListener('ended',()=>{bgMusic.volume=volSlider.value;registerBtn.style.display='block';});}else{videoFallback.style.display='flex';introVideo.style.display='none';document.getElementById('videoNote').innerHTML="🌲 Boo's Forest - Showing your exact forest<br><small>Video coming soon</small>";setTimeout(()=>registerBtn.style.display='block',1800);}};
-registerBtn.onclick=()=>{videoScreen.classList.remove('active');registerScreen.classList.add('active');};
-function getTimeMessage(m){m=parseInt(m)||0;if(m<=1)return "⚡ Quick Dash";if(m<=2)return "🌲 Short trail";if(m<=3)return "✨ Standard journey";return "🌙 Long walk";}
-function updateTimeMsg(){const r=document.getElementById('roomCode').value.trim().toUpperCase()||localStorage.getItem('forestType_lastRoom')||"";let d=localStorage.getItem('forestType_duration_'+r)||localStorage.getItem('forestType_duration')||2;document.getElementById('timeMsg').textContent=getTimeMessage(d)+` (${d} min)`;}
-setInterval(updateTimeMsg,2000);
-let currentRoom="",playerName="",gameInterval=null,gameTimerValue=0,score=0,correctChars=0,startTime=null,currentWord="";
-document.getElementById('joinBtn').onclick=()=>{const n=document.getElementById('playerName').value.trim();const r=document.getElementById('roomCode').value.trim().toUpperCase();if(!n)return alert("Enter name");if(!r)return alert("Enter room");playerName=n;currentRoom=r;localStorage.setItem('forestType_lastRoom',r);let ps=JSON.parse(localStorage.getItem('forestType_players_'+r)||"[]");if(!ps.includes(n))ps.push(n);localStorage.setItem('forestType_players_'+r,JSON.stringify(ps));localStorage.setItem('forestType_score_'+r+'_'+n,"0");registerScreen.classList.remove('active');document.getElementById('lobbyScreen').classList.add('active');const iv=setInterval(()=>{const sig=localStorage.getItem('forestType_start_'+r);if(sig){clearInterval(iv);startCountdown(JSON.parse(sig).duration);}},1000);};
-function startCountdown(d){document.getElementById('lobbyScreen').classList.remove('active');const cd=document.getElementById('countdownScreen');cd.classList.add('active');let c=3;const num=document.getElementById('countNum');num.textContent=c;const ci=setInterval(()=>{c--;if(c>0){num.textContent=c;num.style.animation='none';void num.offsetWidth;num.style.animation='countPop 1s ease';}else if(c===0){num.textContent="START!";}else{clearInterval(ci);cd.classList.remove('active');startTyping(d);}},1000);};
-function startTyping(d){const ts=document.getElementById('typingScreen');ts.classList.add('active');score=0;correctChars=0;startTime=Date.now();gameTimerValue=(parseInt(d)||2)*60;if(gameInterval)clearInterval(gameInterval);nextWord();document.getElementById('typeInput').focus();gameInterval=setInterval(()=>{gameTimerValue--;localStorage.setItem('forestType_timer_'+currentRoom,gameTimerValue.toString());const m=Math.floor(gameTimerValue/60),s=gameTimerValue%60;document.getElementById('gameTimer').textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;const elapsed=(Date.now()-startTime)/1000/60;if(elapsed>0)document.getElementById('wpmVal').textContent=Math.round((correctChars/5)/elapsed);if(gameTimerValue<=0){clearInterval(gameInterval);endGame();}},1000);};
-function nextWord(){currentWord=WORDS[Math.floor(Math.random()*WORDS.length)];document.getElementById('wordDisplay').innerHTML=currentWord.split('').map((c,i)=>`<span id="c${i}">${c}</span>`).join('');}
-document.getElementById('typeInput').addEventListener('input',e=>{const v=e.target.value;for(let i=0;i<currentWord.length;i++){const el=document.getElementById('c'+i);if(!el)continue;el.style.color=i<v.length?(v[i]===currentWord[i]?'#0a9a6a':'#e23b3b'):'';}if(v===currentWord){score+=currentWord.length;correctChars+=currentWord.length;document.getElementById('scoreVal').textContent=score;localStorage.setItem('forestType_score_'+currentRoom+'_'+playerName,score.toString());e.target.value="";nextWord();}});
-function endGame(){document.getElementById('typingScreen').classList.remove('active');const ps=JSON.parse(localStorage.getItem('forestType_players_'+currentRoom)||"[]");let sc=ps.map(n=>({name:n,score:parseInt(localStorage.getItem('forestType_score_'+currentRoom+'_'+n)||"0")})).sort((a,b)=>b.score-a.score);const list=document.getElementById('winnerList');list.innerHTML="";sc.forEach((p,i)=>{const r=document.createElement('div');r.style.cssText="display:flex;justify-content:space-between;padding:12px;background:rgba(255,255,255,.06);border-radius:12px;margin:8px 0";const med=i===0?'🥇':i===1?'🥈':i===2?'🥉':'👻';r.innerHTML=`<span>${med} ${p.name}</span><span>${p.score}</span>`;list.appendChild(r);});localStorage.setItem('forestType_winners_'+currentRoom,JSON.stringify(sc));document.getElementById('winnerScreen').classList.add('active');}
-document.getElementById('toFinalBtn').onclick=()=>{document.getElementById('winnerScreen').classList.remove('active');document.getElementById('finalScreen').classList.add('active');};
-</script></body></html>
+let audioCtx, soundOn=true, musicPlaying=false;
+let dialogues = {
+  boo: ["Boo! I'm lost! 👻", "Wheee! Tap again! ✨", "Can you help me home? 🏠", "I love music! 🎵", "You are my friend! 💖"],
+  ollie: ["Hoot! Wise Ollie here 🦉", "The path is that way! 👉", "Night is magical 🌙", "Careful of bats! 🦇"],
+  bat1: ["Squeak! I'm Batty! 🦇", "We fly at night! 🌃", "Wanna race? 💨"],
+  bat2: ["Eek! Don't scare me! 😅", "Moon is bright tonight! 🌕", "Zooom!"],
+  bat3: ["I'm the biggest bat! 😎", "Boo's my friend! 👻🦇", "Weeeee!"]
+};
+function initAudio(){ if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)(); if(audioCtx.state==='suspended') audioCtx.resume(); }
+function playTone(freq, type, duration, vol=0.3){ if(!soundOn) return; initAudio(); const o=audioCtx.createOscillator(); const g=audioCtx.createGain(); o.type=type; o.frequency.value=freq; o.connect(g); g.connect(audioCtx.destination); g.gain.setValueAtTime(0, audioCtx.currentTime); g.gain.linearRampToValueAtTime(vol, audioCtx.currentTime+0.02); g.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime+duration); o.start(); o.stop(audioCtx.currentTime+duration); }
+function playBooSound(){ playTone(800,'sine',0.2,0.4); setTimeout(()=>playTone(1200,'sine',0.3,0.3),80); setTimeout(()=>playTone(900,'triangle',0.4,0.2),150); if(navigator.vibrate) navigator.vibrate(40); }
+function playOllieSound(){ playTone(200,'triangle',0.3,0.5); setTimeout(()=>playTone(180,'triangle',0.4,0.4),150); }
+function playBatSound(){ playTone(1800,'square',0.08,0.15); setTimeout(()=>playTone(2200,'square',0.08,0.12),60); setTimeout(()=>playTone(1600,'square',0.1,0.12),120); }
+function playMusic(){ if(!soundOn || musicPlaying) return; initAudio(); musicPlaying=true; const loop=()=>{ if(!musicPlaying||!soundOn) return; playTone(261,'sine',1.2,0.04); setTimeout(()=>playTone(329,'sine',1,0.035),400); setTimeout(()=>playTone(392,'sine',1.2,0.03),800); setTimeout(loop,3500); }; loop(); }
+
+function showBubble(id, text){ const b=document.getElementById('bubble-'+id); b.textContent=text; b.classList.add('show'); clearTimeout(b._t); b._t=setTimeout(()=>b.classList.remove('show'),2500); }
+
+function tapBoo(){
+  initAudio(); playBooSound(); playMusic();
+  const el=document.getElementById('boo');
+  el.classList.remove('reacting'); void el.offsetWidth; el.classList.add('reacting');
+  const msg=dialogues.boo[Math.floor(Math.random()*dialogues.boo.length)];
+  showBubble('boo', msg);
+  if(!localStorage.getItem('firstTap')){ localStorage.setItem('firstTap','1'); setTimeout(()=>{ showBubble('ollie','Tap us all! 🦉✨'); },800); }
+}
+function tapChar(id){
+  initAudio();
+  const el=document.getElementById(id);
+  el.classList.remove('reacting','reacting-right'); void el.offsetWidth; el.classList.add(id==='boo'?'reacting':'reacting-right');
+  if(id.includes('bat')) playBatSound(); else if(id==='ollie') playOllieSound();
+  const key=id.startsWith('bat')?'bat1':id;
+  const list=dialogues[id]||dialogues[key]||dialogues.bat1;
+  showBubble(id, list[Math.floor(Math.random()*list.length)]);
+}
+function toggleSound(){ soundOn=!soundOn; document.getElementById('soundBtn').innerHTML=soundOn?'TAP<br>BOO<br>FOR<br>SOUND<br>🔊':'TAP<br>BOO<br>FOR<br>SOUND<br>🔇'; if(soundOn){ initAudio(); playBooSound(); } else { musicPlaying=false; } }
+
+function startJourney(){ initAudio(); playBooSound(); const bg=document.getElementById('game'); bg.style.transition='filter 0.6s'; bg.style.filter='brightness(1.3)'; setTimeout(()=>bg.style.filter='brightness(1)',600); showBubble('boo','Let's go! Follow me! 🌟'); setTimeout(()=>{ if(confirm('Go to Boo house? 🏠')) location.href='boo_house.jpg'; },1200); }
+
+function closeIntro(){ document.getElementById('intro').style.display='none'; }
+(function checkIntro(){ const v=document.getElementById('introVideo'); const sources=['assets/intro.mp4','intro.mp4','./assets/intro.mp4']; let i=0; function tryNext(){ if(i>=sources.length) return; v.src=sources[i++]; v.load(); } v.onerror=tryNext; v.oncanplay=()=>{ document.getElementById('intro').style.display='flex'; v.play().catch(()=>{}); setTimeout(closeIntro,8000); }; tryNext(); })();
+
+// First tap hint
+setTimeout(()=>{ if(!localStorage.getItem('hint')){ const b=document.getElementById('bubble-boo'); b.textContent='Tap me! 👻'; b.classList.add('show'); setTimeout(()=>b.classList.remove('show'),3000); localStorage.setItem('hint','1'); } },1200);
+</script>
+</body>
+</html>
